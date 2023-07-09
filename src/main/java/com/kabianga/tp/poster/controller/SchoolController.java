@@ -1,8 +1,6 @@
 package com.kabianga.tp.poster.controller;
 
-import com.kabianga.tp.poster.dto.NewSchoolRequest;
-import com.kabianga.tp.poster.model.Course;
-import com.kabianga.tp.poster.model.School;
+import com.kabianga.tp.poster.dto.AddSchoolRequest;
 import com.kabianga.tp.poster.service.SchoolService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +12,7 @@ public class SchoolController {
     @Autowired
     SchoolService schoolService;
     @PostMapping("new")
-    public ResponseEntity<?> AddSchool(@RequestBody NewSchoolRequest school){
+    public ResponseEntity<?> AddSchool(@RequestBody AddSchoolRequest school){
         return schoolService.addSchool(school);
 
     }

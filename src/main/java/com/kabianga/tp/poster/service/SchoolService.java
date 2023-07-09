@@ -1,8 +1,7 @@
 package com.kabianga.tp.poster.service;
 
-import com.kabianga.tp.poster.dto.NewSchoolRequest;
+import com.kabianga.tp.poster.dto.AddSchoolRequest;
 import com.kabianga.tp.poster.dto.ResponseDto;
-import com.kabianga.tp.poster.model.Course;
 import com.kabianga.tp.poster.model.School;
 import com.kabianga.tp.poster.model.Zone;
 import com.kabianga.tp.poster.repository.SchoolRepository;
@@ -21,17 +20,17 @@ public class SchoolService {
     ZoneRepository zoneRepository;
     ResponseDto responseDto;
 
-    public ResponseEntity<?> addSchool(NewSchoolRequest newSchoolRequest){
+    public ResponseEntity<?> addSchool(AddSchoolRequest addSchoolRequest){
         responseDto=new ResponseDto();
         try{
             School school=new School();
-            if(!zoneRepository.existsById(newSchoolRequest.getZoneId())){
+            if(!zoneRepository.existsById(addSchoolRequest.getZoneId())){
                 responseDto.setStatus(HttpStatus.NOT_FOUND);
                 responseDto.setDescription("Zone Not Found");
                 return new ResponseEntity<>(responseDto, responseDto.getStatus());
             }
-            Zone zone=zoneRepository.findById(newSchoolRequest.getZoneId()).get();
-            school.setName(newSchoolRequest.getName());
+            Zone zone=zoneRepository.findById(addSchoolRequest.getZoneId()).get();
+            school.setName(addSchoolRequest.getName());
             school.setZone(zone);
             responseDto.setPayload(schoolRepository.save(school));
              responseDto.setStatus(HttpStatus.CREATED);

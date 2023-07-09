@@ -1,6 +1,6 @@
 package com.kabianga.tp.poster.service;
 
-import com.kabianga.tp.poster.dto.NewStudentRequest;
+import com.kabianga.tp.poster.dto.AddStudentRequest;
 import com.kabianga.tp.poster.dto.ResponseDto;
 import com.kabianga.tp.poster.model.Course;
 import com.kabianga.tp.poster.model.Student;
@@ -20,19 +20,20 @@ public class StudentService {
     CourseRepository courseRepository;
     ResponseDto responseDto;
 
-    public ResponseEntity<?> addStudent(NewStudentRequest newStudentRequest) {
+    public ResponseEntity<?> addStudent(AddStudentRequest addStudentRequest) {
         responseDto = new ResponseDto();
         try {
             Student student = new Student();
-            if (!courseRepository.existsById(newStudentRequest.getCourseId())) {
+            if (!courseRepository.existsById(addStudentRequest.getCourseId())) {
                 responseDto.setStatus(HttpStatus.NOT_FOUND);
                 responseDto.setDescription("Course Not Found");
                 return new ResponseEntity<>(responseDto, responseDto.getStatus());
             }
-            Course course = courseRepository.findById(newStudentRequest.getCourseId()).get();
-            student.setName(newStudentRequest.getName());
+            Course course = courseRepository.findById(addStudentRequest.getCourseId()).get();
+            student.setName(addStudentRequest.getName());
             student.setCourse(course);
-            student.setRegNo(newStudentRequest.getRegNo());
+            student.setRegNo(addStudentRequest.getRegNo());
+            student.setEmail(addStudentRequest.getEmail());
             responseDto.setPayload(studentRepository.save(student));
             responseDto.setStatus(HttpStatus.CREATED);
             responseDto.setDescription("Student Added Successfully");

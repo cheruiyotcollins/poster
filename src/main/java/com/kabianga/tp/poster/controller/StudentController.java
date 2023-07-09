@@ -1,8 +1,6 @@
 package com.kabianga.tp.poster.controller;
 
-import com.kabianga.tp.poster.dto.NewSchoolRequest;
-import com.kabianga.tp.poster.dto.NewStudentRequest;
-import com.kabianga.tp.poster.repository.StudentRepository;
+import com.kabianga.tp.poster.dto.AddStudentRequest;
 import com.kabianga.tp.poster.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +12,11 @@ public class StudentController {
     @Autowired
     StudentService studentService;
     @PostMapping("new")
-    public ResponseEntity<?> AddSchool(@RequestBody NewStudentRequest newStudentRequest){
-        return studentService.addStudent(newStudentRequest);
+    public ResponseEntity<?> AddSchool(@RequestBody AddStudentRequest addStudentRequest){
+        return studentService.addStudent(addStudentRequest);
 
     }
-    //Admin only
+
 
     @GetMapping("list")
     public ResponseEntity<?> findAll(){
