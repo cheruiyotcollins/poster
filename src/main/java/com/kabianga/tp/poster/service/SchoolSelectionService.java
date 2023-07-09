@@ -2,7 +2,6 @@ package com.kabianga.tp.poster.service;
 
 import com.kabianga.tp.poster.dto.ResponseDto;
 import com.kabianga.tp.poster.model.SchoolSelection;
-import com.kabianga.tp.poster.model.ZoneSelection;
 import com.kabianga.tp.poster.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -38,8 +37,8 @@ public class SchoolSelectionService {
             responseDto.setDescription("School not found");
             return new  ResponseEntity(responseDto,responseDto.getStatus());
         }
-        //checking if student has already selected a school
-        if(schoolSelectionRepository.findByStudentAndSchooId(studentRepository.findByEmail(email).get(),schoolRepository.findById(schoolId).get()).isPresent() ){
+        //checking if student has already selected this school
+        if(schoolSelectionRepository.findByStudentAndSchoolId(studentRepository.findByEmail(email).get(),schoolRepository.findById(schoolId).get()).isPresent() ){
             responseDto.setStatus(HttpStatus.NOT_ACCEPTABLE);
             responseDto.setDescription("You cant select one school more than once");
             return new  ResponseEntity(responseDto,responseDto.getStatus());
@@ -51,6 +50,7 @@ public class SchoolSelectionService {
             return new  ResponseEntity(responseDto,responseDto.getStatus());
         }
         //if student has selected a zone then proceed to select school
+        //todo only initialize objects once
         if(zoneSelectionRepository.findByStudent(studentRepository.findByEmail(email).get()).isPresent()){
             SchoolSelection schoolSelection= new SchoolSelection();
             schoolSelection.setSchool(schoolRepository.findById(schoolId).get());
@@ -63,8 +63,6 @@ public class SchoolSelectionService {
         responseDto.setStatus(HttpStatus.BAD_REQUEST);
         responseDto.setDescription("Something went wrong");
         return new  ResponseEntity(responseDto,responseDto.getStatus());
-
-
 
     }
     public ResponseEntity<?> findAll(){

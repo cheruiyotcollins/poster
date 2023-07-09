@@ -17,6 +17,7 @@ public class SchoolSelectionController {
     @GetMapping("new/{schoolId}")
     public ResponseEntity<?> makeOrUpdateSelection(@PathVariable long schoolId){
         String email="kelvincollins86@gmail.com";
+        //todo Authentication authentication
         return schoolSelectionService.selectSchool(email,schoolId);
     }
     @GetMapping("list")

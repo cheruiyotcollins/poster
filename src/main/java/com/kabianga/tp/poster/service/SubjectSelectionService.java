@@ -41,6 +41,7 @@ public class SubjectSelectionService {
             responseDto.setDescription("School selection not found");
             return new  ResponseEntity(responseDto,responseDto.getStatus());
         }
+        //Todo student cannot select more than one combination in a school
 
         //checking if there is an existing subject selection in that school
         if(subjectSelectionRepository.findBySchoolSelectionAndSubjectId(subjectSelectionRequest.getSubjectId(),schoolSelectionRepository.findById(subjectSelectionRequest.getSchoolSelectionId()).get()).isPresent()){

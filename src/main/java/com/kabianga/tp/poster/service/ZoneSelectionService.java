@@ -23,33 +23,38 @@ public class ZoneSelectionService {
 
     public ResponseEntity<?> selectZone(String email,long zoneId){
         responseDto=new ResponseDto();
+        //checking if there is an associated student with logged in user email
         if(studentRepository.findByEmail(email).isEmpty()){
             responseDto.setStatus(HttpStatus.NOT_FOUND);
             responseDto.setDescription("Student with associated logged in user not found");
             return new  ResponseEntity(responseDto,responseDto.getStatus());
 
         }
+        //check if zone exist
         if(!zoneRepository.existsById(zoneId)){
             responseDto.setStatus(HttpStatus.NOT_FOUND);
             responseDto.setDescription("Zone not found");
             return new  ResponseEntity(responseDto,responseDto.getStatus());
         }
+        //checking if student already picked a zone, if yes update it
+        //todo if student already picked schools he/she cant update zone
         if(zoneSelectionRepository.findByStudent(studentRepository.findByEmail(email).get()).isPresent()){
             ZoneSelection selection= zoneSelectionRepository.findByStudent(studentRepository.findByEmail(email).get()).get();
             selection.setZone(zoneRepository.findById(zoneId).get());
             zoneSelectionRepository.save(selection);
             responseDto.setPayload(selection);
             responseDto.setStatus(HttpStatus.CREATED);
-            responseDto.setDescription("Zone updated Successfully");
+            responseDto.setDescription("Zone selection updated Successfully");
             return new  ResponseEntity(responseDto,responseDto.getStatus());
         }
+
         ZoneSelection selection=new ZoneSelection();
         selection.setZone(zoneRepository.findById(zoneId).get());
         selection.setStudent(studentRepository.findByEmail(email).get());
         zoneSelectionRepository.save(selection);
         responseDto.setPayload(selection);
         responseDto.setStatus(HttpStatus.CREATED);
-        responseDto.setDescription("Zone Created Successfully");
+        responseDto.setDescription("Zone selected Successfully");
         return new  ResponseEntity(responseDto,responseDto.getStatus());
 
 

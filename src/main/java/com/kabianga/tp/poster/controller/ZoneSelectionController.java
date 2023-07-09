@@ -14,6 +14,7 @@ public class ZoneSelectionController {
     @GetMapping("new/{zoneId}")
     public ResponseEntity<?> makeOrUpdateSelection(@PathVariable long zoneId){
         String email="kelvincollins86@gmail.com";
+        //todo, this is to be picked from authenticated
         return zoneSelectionService.selectZone(email,zoneId);
     }
     @GetMapping("list")

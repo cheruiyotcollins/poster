@@ -28,6 +28,7 @@ public class SubjectSelection {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JsonIgnore
     private Student student;
+    //todo
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "school_selection_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
