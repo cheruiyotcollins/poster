@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/zone/")
+@RequestMapping("/zones/")
 public class ZoneController {
     @Autowired
     ZoneService zoneService;

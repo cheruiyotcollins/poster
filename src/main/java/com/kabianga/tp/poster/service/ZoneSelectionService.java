@@ -1,6 +1,7 @@
 package com.kabianga.tp.poster.service;
 
 import com.kabianga.tp.poster.dto.ResponseDto;
+import com.kabianga.tp.poster.dto.ZoneSelectionResponse;
 import com.kabianga.tp.poster.model.ZoneSelection;
 import com.kabianga.tp.poster.repository.ZoneSelectionRepository;
 import com.kabianga.tp.poster.repository.StudentRepository;
@@ -9,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ZoneSelectionService {
@@ -62,17 +66,24 @@ public class ZoneSelectionService {
     }
     public ResponseEntity<?> findAll(){
         responseDto=new ResponseDto();
-        responseDto.setPayload(zoneSelectionRepository.findAll());
+        List<ZoneSelection> zoneSelectionList=zoneSelectionRepository.findAll();
+        List<ZoneSelectionResponse> zoneSelectionResponseList=new ArrayList<>();
+        zoneSelectionList.stream().forEach(zoneSelection -> {
+            zoneSelectionResponseList.add(setZoneSelectionResponse(zoneSelection));
+        });
+        responseDto.setPayload(zoneSelectionResponseList);
         responseDto.setStatus(HttpStatus.FOUND);
         responseDto.setDescription("List of all Zones");
         return new  ResponseEntity(responseDto,responseDto.getStatus());
 
     }
-    public ResponseEntity<?> findSelectionById(long id){
+    public ResponseEntity<?> findZoneSelectionById(long id){
         responseDto=new ResponseDto();
         try{
             if(zoneSelectionRepository.existsById(id)){
-                responseDto.setPayload( zoneSelectionRepository.findById(id).get());
+                ZoneSelection zoneSelection=zoneSelectionRepository.findById(id).get();
+
+                responseDto.setPayload( setZoneSelectionResponse(zoneSelection));
                 responseDto.setStatus(HttpStatus.FOUND);
                 responseDto.setDescription("Success");
                 return new ResponseEntity<>(responseDto,responseDto.getStatus());
@@ -82,14 +93,19 @@ public class ZoneSelectionService {
                 return new ResponseEntity<>( responseDto,HttpStatus.NOT_FOUND);
 
             }
-
-
-
         }catch(Exception e){
             responseDto.setStatus(HttpStatus.BAD_REQUEST);
             responseDto.setDescription("Something went wrong");
             return new ResponseEntity<>( responseDto,responseDto.getStatus());
         }
+    }
+    public ZoneSelectionResponse setZoneSelectionResponse(ZoneSelection zoneSelection){
+        ZoneSelectionResponse zoneSelectionResponse=new ZoneSelectionResponse();
+        zoneSelectionResponse.setZoneName(zoneSelection.getZone().getName());
+        zoneSelectionResponse.setRegNo(zoneSelection.getStudent().getRegNo());
+        zoneSelectionResponse.setStudentName(zoneSelection.getStudent().getName());
+        return zoneSelectionResponse;
+
     }
     public ResponseEntity<?> deleteById(long id){
         responseDto=new ResponseDto();

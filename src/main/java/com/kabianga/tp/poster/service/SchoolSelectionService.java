@@ -1,12 +1,16 @@
 package com.kabianga.tp.poster.service;
 
 import com.kabianga.tp.poster.dto.ResponseDto;
+import com.kabianga.tp.poster.dto.SchoolSelectionResponse;
 import com.kabianga.tp.poster.model.SchoolSelection;
 import com.kabianga.tp.poster.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class SchoolSelectionService {
@@ -67,7 +71,12 @@ public class SchoolSelectionService {
     }
     public ResponseEntity<?> findAll(){
         responseDto=new ResponseDto();
-        responseDto.setPayload(schoolSelectionRepository.findAll());
+        List<SchoolSelection> schoolSelections=schoolSelectionRepository.findAll();
+        List<SchoolSelectionResponse> schoolSelectionResponses=new ArrayList<>();
+        schoolSelections.stream().forEach(schoolSelection -> {
+            schoolSelectionResponses.add(setSchoolSelectionResponse(schoolSelection));
+        });
+        responseDto.setPayload(schoolSelectionResponses);
         responseDto.setStatus(HttpStatus.FOUND);
         responseDto.setDescription("List of all Zones");
         return new  ResponseEntity(responseDto,responseDto.getStatus());
@@ -77,7 +86,8 @@ public class SchoolSelectionService {
         responseDto=new ResponseDto();
         try{
             if(schoolSelectionRepository.existsById(id)){
-                responseDto.setPayload( schoolSelectionRepository.findById(id).get());
+                //calling setSchoolSelectionResponse to set up SchoolSelectionResponse
+                responseDto.setPayload(setSchoolSelectionResponse(schoolSelectionRepository.findById(id).get()));
                 responseDto.setStatus(HttpStatus.FOUND);
                 responseDto.setDescription("Success");
                 return new ResponseEntity<>(responseDto,responseDto.getStatus());
@@ -95,6 +105,14 @@ public class SchoolSelectionService {
             responseDto.setDescription("Something went wrong");
             return new ResponseEntity<>( responseDto,responseDto.getStatus());
         }
+    }
+    public SchoolSelectionResponse setSchoolSelectionResponse(SchoolSelection schoolSelection){
+        SchoolSelectionResponse schoolSelectionResponse=new SchoolSelectionResponse();
+        schoolSelectionResponse.setSchoolName(schoolSelection.getSchool().getName());
+        schoolSelectionResponse.setZoneName(zoneSelectionRepository.findByStudent(schoolSelection.getStudent()).get().getZone().getName());
+        schoolSelectionResponse.setRegNo(schoolSelection.getStudent().getRegNo());
+        schoolSelectionResponse.setStudentName(schoolSelection.getStudent().getName());
+        return schoolSelectionResponse;
     }
     public ResponseEntity<?> deleteById(long id){
         responseDto=new ResponseDto();

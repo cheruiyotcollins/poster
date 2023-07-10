@@ -16,5 +16,7 @@ public class Zone {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    //todo use enum in name
     private String name;
 }

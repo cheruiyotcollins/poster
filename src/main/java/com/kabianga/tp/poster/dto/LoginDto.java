@@ -5,12 +5,11 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter
 @Setter
-@AllArgsConstructor
+@Getter
 @NoArgsConstructor
-public class ZoneSelectionResponse {
-    private String regNo;
-    private String studentName;
-    private String zoneName;
+@AllArgsConstructor
+public class LoginDto {
+    private String usernameOrEmail;
+    private String password;
 }

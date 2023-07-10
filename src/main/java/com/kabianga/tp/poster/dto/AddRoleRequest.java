@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class SchoolSelectionResponse {
-    private String regNo;
-    private String studentName;
-    private  String zoneName;
-    private String schoolName;
+public class AddRoleRequest {
+    private String name;
 }

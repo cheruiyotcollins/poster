@@ -25,6 +25,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String username;
     @Column(nullable = false, unique = true)
+//    @Email
     private String email;
 
     @Column(nullable = false, unique = true)
@@ -32,9 +33,10 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "role_id", nullable = false)
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    @JsonIgnore
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id")
+    )
+    private Set<Role> roles;
 }

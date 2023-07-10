@@ -22,7 +22,14 @@ public class SubjectSelection {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private long subjectId;
+    //todo enum to pick confirmation state
+    private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "subject_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Subject subject;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "student_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)

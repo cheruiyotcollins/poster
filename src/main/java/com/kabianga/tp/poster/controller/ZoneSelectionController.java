@@ -1,13 +1,12 @@
 package com.kabianga.tp.poster.controller;
 
-import com.kabianga.tp.poster.model.Zone;
 import com.kabianga.tp.poster.service.ZoneSelectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/zones/selections/")
+@RequestMapping("/selections/zones/")
 public class ZoneSelectionController {
     @Autowired
     ZoneSelectionService zoneSelectionService;
@@ -24,7 +23,7 @@ public class ZoneSelectionController {
     }
     @GetMapping("find/{id}")
     public ResponseEntity<?> findById(@PathVariable long id){
-        return zoneSelectionService.findSelectionById(id);
+        return zoneSelectionService.findZoneSelectionById(id);
 
     }
     @GetMapping("delete/{id}")

@@ -8,7 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/subjects/selections/")
+@RequestMapping("/selections/subjects/")
 public class SubjectSelectionController {
     @Autowired
     SubjectSelectionService subjectSelectionService;
