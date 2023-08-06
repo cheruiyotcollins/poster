@@ -5,11 +5,12 @@ import com.kabianga.tp.poster.model.Subject;
 import com.kabianga.tp.poster.service.SubjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/subjects/")
-
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class SubjectController {
     @Autowired
     SubjectService subjectService;
@@ -32,7 +33,7 @@ public class SubjectController {
 
     }
 
-
+    @PreAuthorize("hasAnyAuthority('ADMIN','LECTURER')")
     @GetMapping("delete/{id}")
     public ResponseEntity<?> deleteById(@PathVariable long id){
         return subjectService.deleteById(id);

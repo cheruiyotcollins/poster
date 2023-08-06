@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/course/")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class CourseController {
     @Autowired
     CourseService courseService;

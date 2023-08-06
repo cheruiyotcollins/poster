@@ -15,13 +15,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/user/auth")
+@RequestMapping("/user/auth/")
 public class AuthController {
     @Autowired
     AuthService authService;
@@ -63,7 +66,7 @@ public class AuthController {
     @PostMapping(value = {"/register", "/signup"})
     @PreAuthorize("permitAll()")
     public ResponseEntity<?> register(@RequestBody SignUpRequest signUpRequest){
-        return authService.register(signUpRequest);
+               return authService.register(signUpRequest);
     }
 
 
@@ -126,5 +129,17 @@ public class AuthController {
     @PostMapping("new/role")
     public ResponseEntity<?> addRole(@RequestBody AddRoleRequest addRoleRequest){
         return authService.addRole(addRoleRequest);
+    }
+    @Operation(summary = "Find Current User")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Role Created Successfully",
+                    content = {@Content(mediaType = "application/json",schema = @Schema(implementation = Role.class))}),
+            @ApiResponse(responseCode = "401",description = "Unauthorized user",content = @Content),
+            @ApiResponse(responseCode = "404",description = "Role not found",content = @Content),
+            @ApiResponse(responseCode = "400",description = "Bad Request",content = @Content)})
+    @GetMapping("current")
+    public ResponseEntity<?> getCurrentUser( Authentication authentication){
+
+        return authService.getCurrentUser(authentication.getName());
     }
 }

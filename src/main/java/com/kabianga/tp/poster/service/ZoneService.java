@@ -55,7 +55,7 @@ public class ZoneService {
 
         try{
 
-            return new ResponseEntity<>( zoneRepository.findAll(),HttpStatus.FOUND);
+            return new ResponseEntity<>( zoneRepository.findAll(),HttpStatus.OK);
 
         }catch(Exception e){
             responseDto.setStatus(HttpStatus.BAD_REQUEST);

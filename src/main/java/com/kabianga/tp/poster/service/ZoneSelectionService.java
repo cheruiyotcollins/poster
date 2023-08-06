@@ -6,6 +6,7 @@ import com.kabianga.tp.poster.model.ZoneSelection;
 import com.kabianga.tp.poster.repository.ZoneSelectionRepository;
 import com.kabianga.tp.poster.repository.StudentRepository;
 import com.kabianga.tp.poster.repository.ZoneRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Slf4j
 public class ZoneSelectionService {
     @Autowired
     ZoneSelectionRepository zoneSelectionRepository;
@@ -30,6 +32,7 @@ public class ZoneSelectionService {
         //checking if there is an associated student with logged in user email
         if(studentRepository.findByEmail(email).isEmpty()){
             responseDto.setStatus(HttpStatus.NOT_FOUND);
+            log.info("student not found");
             responseDto.setDescription("Student with associated logged in user not found");
             return new  ResponseEntity(responseDto,responseDto.getStatus());
 
@@ -37,6 +40,7 @@ public class ZoneSelectionService {
         //check if zone exist
         if(!zoneRepository.existsById(zoneId)){
             responseDto.setStatus(HttpStatus.NOT_FOUND);
+            log.info("Zone not found");
             responseDto.setDescription("Zone not found");
             return new  ResponseEntity(responseDto,responseDto.getStatus());
         }

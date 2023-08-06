@@ -5,11 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Setter
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
-public class LoginDto {
-    private String username;
-    private String password;
+@NoArgsConstructor
+public class SchoolInfoResponse {
+    private  String zoneName;
+    private String schoolName;
+    private long id;
 }

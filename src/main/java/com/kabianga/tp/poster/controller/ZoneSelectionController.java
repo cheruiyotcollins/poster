@@ -3,18 +3,19 @@ package com.kabianga.tp.poster.controller;
 import com.kabianga.tp.poster.service.ZoneSelectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/selections/zones/")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class ZoneSelectionController {
     @Autowired
     ZoneSelectionService zoneSelectionService;
     @GetMapping("new/{zoneId}")
-    public ResponseEntity<?> makeOrUpdateSelection(@PathVariable long zoneId){
-        String email="kelvincollins86@gmail.com";
-        //todo, this is to be picked from authenticated
-        return zoneSelectionService.selectZone(email,zoneId);
+    public ResponseEntity<?> makeOrUpdateSelection(Authentication authentication, @PathVariable long zoneId){
+        String email =authentication.getName();
+          return zoneSelectionService.selectZone(email,zoneId);
     }
     @GetMapping("list")
     public ResponseEntity<?> findAll(){

@@ -21,4 +21,6 @@ public interface AuthService {
 
 
     ResponseEntity<?> addUser(SignUpRequest signUpRequest);
+
+    ResponseEntity<?> getCurrentUser(String name);
 }

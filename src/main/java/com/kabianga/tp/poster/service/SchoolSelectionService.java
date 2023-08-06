@@ -1,8 +1,12 @@
 package com.kabianga.tp.poster.service;
 
 import com.kabianga.tp.poster.dto.ResponseDto;
+import com.kabianga.tp.poster.dto.SchoolInfoResponse;
 import com.kabianga.tp.poster.dto.SchoolSelectionResponse;
+import com.kabianga.tp.poster.model.School;
 import com.kabianga.tp.poster.model.SchoolSelection;
+import com.kabianga.tp.poster.model.Student;
+import com.kabianga.tp.poster.model.Zone;
 import com.kabianga.tp.poster.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -69,7 +73,10 @@ public class SchoolSelectionService {
         return new  ResponseEntity(responseDto,responseDto.getStatus());
 
     }
+
+
     public ResponseEntity<?> findAll(){
+
         responseDto=new ResponseDto();
         List<SchoolSelection> schoolSelections=schoolSelectionRepository.findAll();
         List<SchoolSelectionResponse> schoolSelectionResponses=new ArrayList<>();
@@ -78,7 +85,7 @@ public class SchoolSelectionService {
         });
         responseDto.setPayload(schoolSelectionResponses);
         responseDto.setStatus(HttpStatus.FOUND);
-        responseDto.setDescription("List of all Zones");
+        responseDto.setDescription("List of all schools");
         return new  ResponseEntity(responseDto,responseDto.getStatus());
 
     }

@@ -2,14 +2,22 @@ package com.kabianga.tp.poster.service;
 
 import com.kabianga.tp.poster.dto.AddSchoolRequest;
 import com.kabianga.tp.poster.dto.ResponseDto;
+import com.kabianga.tp.poster.dto.SchoolInfoResponse;
 import com.kabianga.tp.poster.model.School;
+import com.kabianga.tp.poster.model.Student;
 import com.kabianga.tp.poster.model.Zone;
 import com.kabianga.tp.poster.repository.SchoolRepository;
+import com.kabianga.tp.poster.repository.StudentRepository;
 import com.kabianga.tp.poster.repository.ZoneRepository;
+import com.kabianga.tp.poster.repository.ZoneSelectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @Service
 public class SchoolService {
@@ -18,6 +26,10 @@ public class SchoolService {
 
     @Autowired
     ZoneRepository zoneRepository;
+    @Autowired
+    StudentRepository studentRepository;
+    @Autowired
+    ZoneSelectionRepository zoneSelectionRepository;
     ResponseDto responseDto;
 
     public ResponseEntity<?> addSchool(AddSchoolRequest addSchoolRequest){
@@ -101,5 +113,27 @@ public class SchoolService {
             responseDto.setDescription("Something went wrong please try again later");
             return new ResponseEntity<>( responseDto,responseDto.getStatus());
         }
+    }
+
+    public ResponseEntity<?> findSchoolsPerZone(String email){
+
+        Student student= studentRepository.findByEmail(email).get();
+        Zone zone= zoneSelectionRepository.findByStudent(student).get().getZone();
+        List<School> listSchools=schoolRepository.findByZone(zone);
+        System.out.println(listSchools.size());
+        responseDto=new ResponseDto();
+        List<SchoolInfoResponse> schoolInfoResponses=new ArrayList<>();
+        listSchools.stream().forEach(school-> {
+            SchoolInfoResponse schoolInfoResponse=new SchoolInfoResponse();
+            schoolInfoResponse.setSchoolName(school.getName());
+            schoolInfoResponse.setZoneName(school.getZone().getName());
+            schoolInfoResponse.setId(school.getId());
+            schoolInfoResponses.add(schoolInfoResponse);
+        });
+        responseDto.setPayload(schoolInfoResponses);
+        responseDto.setStatus(HttpStatus.OK);
+        responseDto.setDescription("List of schools in selected zone");
+        return new  ResponseEntity(responseDto,responseDto.getStatus());
+
     }
 }

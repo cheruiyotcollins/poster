@@ -56,7 +56,10 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-        http.csrf().disable()
+        http.cors()
+                .and()
+                .csrf()
+                .disable()
                 .authorizeHttpRequests((authorize) ->
                                        //all permitted
                                authorize.requestMatchers("/swagger-ui/**").permitAll()
@@ -70,28 +73,23 @@ public class SecurityConfig {
                                 .requestMatchers("/user/auth/list/all").hasAuthority("ADMIN")
                                 .requestMatchers("/user/auth/deleteById/**").hasAuthority("ADMIN")
                                 .requestMatchers("/user/auth/new/role").hasAuthority("ADMIN")
-
+                                .requestMatchers("/user/auth/current").hasAnyAuthority("ADMIN","LECTURER","STUDENT")
                                       //Admin and lecturer Access
-                                .requestMatchers("/course/**").hasAnyAuthority("ADMIN","LECTURER")
-                                .requestMatchers("/schools/**").hasAnyAuthority("ADMIN","LECTURER")
-                                .requestMatchers("/students/**").hasAnyAuthority("ADMIN","LECTURER")
-                                .requestMatchers("/subjects/**").hasAnyAuthority("ADMIN","LECTURER")
-                                .requestMatchers("/zones/**").hasAnyAuthority("ADMIN","LECTURER")
-                                .requestMatchers("/selections/schools/list/**").hasAnyAuthority("ADMIN","LECTURER")
-                                .requestMatchers("/selections/zones/list/**").hasAnyAuthority("ADMIN","LECTURER")
-                                .requestMatchers("/selections/subjects/list/**").hasAnyAuthority("ADMIN","LECTURER")
+                                .requestMatchers("/selections/schools/list/**").hasAnyAuthority("ADMIN","LECTURER","STUDENT")
+                                .requestMatchers("/selections/zones/list/**").hasAnyAuthority("ADMIN","LECTURER","STUDENT")
+                                .requestMatchers("/selections/subjects/list/**").hasAnyAuthority("ADMIN","LECTURER","STUDENT")
                                 .requestMatchers("/selections/schools/delete/**").hasAnyAuthority("ADMIN","LECTURER")
                                 .requestMatchers("/selections/zones/delete/**").hasAnyAuthority("ADMIN","LECTURER")
                                 .requestMatchers("/selections/subjects/delete/**").hasAnyAuthority("ADMIN","LECTURER")
-                                .requestMatchers("/selections/schools/find/**").hasAnyAuthority("ADMIN","LECTURER")
-                                .requestMatchers("/selections/zones/find/**").hasAnyAuthority("ADMIN","LECTURER")
-                                .requestMatchers("/selections/subjects/find/**").hasAnyAuthority("ADMIN","LECTURER")
+                                .requestMatchers("/selections/schools/find/**").hasAnyAuthority("ADMIN","LECTURER","STUDENT")
+                                .requestMatchers("/selections/zones/find/**").hasAnyAuthority("ADMIN","LECTURER","STUDENT")
+                                .requestMatchers("/selections/subjects/find/**").hasAnyAuthority("ADMIN","LECTURER","STUDENT")
                                        //Students Access
-                                .requestMatchers("/selections/schools/new/**").hasAuthority("STUDENT")
-                                .requestMatchers("/selections/zones/new/**").hasAuthority("ADMIN")
-                                .requestMatchers("/selections/subjects/new/**").hasAuthority("ADMIN")
-
-
+                                .requestMatchers("/selections/schools/new/**").hasAnyAuthority("ADMIN","LECTURER","STUDENT")
+                                .requestMatchers("/selections/zones/new/**").hasAuthority("STUDENT")
+                                .requestMatchers("/selections/subjects/new/**").hasAuthority("STUDENT")
+                                .requestMatchers("/subjects/list/**").hasAnyAuthority("ADMIN","LECTURER","STUDENT")
+                                 .requestMatchers("/subjects/find/**").hasAnyAuthority("ADMIN","LECTURER","STUDENT")
 
 
                                 .anyRequest().authenticated()

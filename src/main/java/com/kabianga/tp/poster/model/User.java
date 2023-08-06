@@ -28,8 +28,6 @@ public class User {
 //    @Email
     private String email;
 
-    @Column(nullable = false, unique = true)
-    private String msisdn;
     @Column(nullable = false)
     private String password;
 

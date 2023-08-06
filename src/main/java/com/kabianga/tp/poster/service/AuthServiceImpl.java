@@ -1,10 +1,7 @@
 package com.kabianga.tp.poster.service;
 
 
-import com.kabianga.tp.poster.dto.AddRoleRequest;
-import com.kabianga.tp.poster.dto.LoginDto;
-import com.kabianga.tp.poster.dto.ResponseDto;
-import com.kabianga.tp.poster.dto.SignUpRequest;
+import com.kabianga.tp.poster.dto.*;
 import com.kabianga.tp.poster.model.Role;
 import com.kabianga.tp.poster.model.User;
 import com.kabianga.tp.poster.repository.RoleRepository;
@@ -19,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 @Service
@@ -49,7 +47,7 @@ public class AuthServiceImpl implements AuthService {
     public String login(LoginDto loginDto) {
 
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                loginDto.getUsernameOrEmail(), loginDto.getPassword()));
+                loginDto.getUsername(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -75,7 +73,7 @@ public class AuthServiceImpl implements AuthService {
         user.setName(signUpRequest.getName());
         user.setUsername(signUpRequest.getUsername());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        user.setMsisdn(signUpRequest.getMsisdn());
+
            if(roleRepository.findByName("STUDENT").isPresent()){
                 Role userRole = roleRepository.findByName("STUDENT").get();
                  user.setRoles(Collections.singleton(userRole));
@@ -144,7 +142,6 @@ public class AuthServiceImpl implements AuthService {
             return new ResponseEntity( "Username is already taken!",
                     HttpStatus.NOT_ACCEPTABLE);
         }
-        System.out.println(":::::::::::::::::::::::::::"+signUpRequest.getPassword());
 
         // Creating user's account
         User user = new User();
@@ -152,7 +149,7 @@ public class AuthServiceImpl implements AuthService {
         user.setName(signUpRequest.getName());
         user.setUsername(signUpRequest.getUsername());
         user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
-        user.setMsisdn(signUpRequest.getMsisdn());
+
         if(roleRepository.existsById(signUpRequest.getRoleId())){
             Role userRole = roleRepository.findById(signUpRequest.getRoleId()).get();
             user.setRoles(Collections.singleton(userRole));
@@ -160,6 +157,18 @@ public class AuthServiceImpl implements AuthService {
         userRepository.save(user);
 
         return new ResponseEntity("User Added successfully",HttpStatus.ACCEPTED);
+    }
+
+    @Override
+    public ResponseEntity<?> getCurrentUser(String email) {
+
+        CurrentUserDto currentUserDto=new CurrentUserDto();
+       User user= userRepository.findByEmail(email).get();
+       currentUserDto.setName(user.getUsername());
+       currentUserDto.setEmail(user.getEmail());
+       currentUserDto.setRole(user.getRoles().iterator().next().getId());
+       System.out.println(currentUserDto.getRole());
+       return new ResponseEntity<>(currentUserDto,HttpStatus.OK);
     }
 
 
